@@ -3,27 +3,45 @@ import java.util.ArrayList;
 import java.util.Vector;
 import java.util.LinkedList;
 import java.util.HashMap;
-import java.util.Scanner;
 import java.util.Iterator;
 import java.util.Map;
 
 public class assignment4 {
-    public static void main(String[] args) {
-        String[] arr1 = { "A", "B", "C" };
+    public static void main(String[] args) throws Exception {
         HashMap<String, Node> mp1 = new HashMap<>();
         HashMap<String, Integer> mp2 = new HashMap<>();
-        for (int i = 0; i < arr1.length; i++) {
-            mp1.put(arr1[i], new Node(arr1[i]));
-            mp2.put(arr1[i], i);
+        BufferedReader nodes_csv = new BufferedReader(new FileReader("nodes.csv"));
+        String row;
+        int index = 0;
+        while ((row = nodes_csv.readLine()) != null) {
+            String[] data = row.split(",(?=(?:(?:[^\"]*\"){2})*[^\"]*$)");
+            if (!data[1].equals("Label")) {
+                // System.out.println(data[1] + ": " + index);
+                mp1.put(data[1], new Node(data[1]));
+                mp2.put(data[1], index);
+                index++;
+            }
         }
-        Graph g = new Graph(arr1.length, mp2);
-        Edge e1 = new Edge(mp1.get("A"), mp1.get("B"), 7);
-        Edge e2 = new Edge(mp1.get("B"), mp1.get("C"), 6);
-        Edge e3 = new Edge(mp1.get("C"), mp1.get("A"), 3);
-        Edge[] e = { e1, e2, e3 };
-        for (int i = 0; i < e.length; i++) {
-            g.addEdge(e[i]);
+        int count = index;
+        nodes_csv.close();
+
+        Graph g = new Graph(count, mp2);
+
+        BufferedReader edges_csv = new BufferedReader(new FileReader("edges.csv"));
+        while ((row = edges_csv.readLine()) != null) {
+            String[] data = row.split(",(?=(?:(?:[^\"]*\"){2})*[^\"]*$)");
+            if (!data[0].equals("Source")) {
+                // System.out.println(data[0] + ": " + data[1] + ": " + data[2]);
+                Edge e1 = new Edge(mp1.get(data[0]), mp1.get(data[1]), Integer.parseInt(data[2]));
+                Edge e2 = new Edge(mp1.get(data[1]), mp1.get(data[0]), Integer.parseInt(data[2]));
+                g.addEdge(e1);
+                g.addEdge(e2);
+            }
         }
+        edges_csv.close();
+
+        g.average();
+
     }
 }
 
@@ -44,6 +62,16 @@ class Graph {
     public void addEdge(Edge e) {
         int loc = mp2.get(e.getSource().getId());
         adj[loc].addFirst(e);
+    }
+
+    public void average() {
+        float sum = 0;
+        for (int i = 0; i < V; i++) {
+            sum += adj[i].size();
+        }
+        float ans = sum / V;
+        String formatted = String.format("%.02f", ans);
+        System.out.println(formatted);
     }
 
 }
