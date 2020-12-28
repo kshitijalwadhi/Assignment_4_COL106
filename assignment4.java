@@ -188,8 +188,126 @@ class Graph {
                 count++;
             }
         }
-        System.out.println(count);
-        System.out.println(indep_story[0].size());
+
+        // sorting lexicographically
+        for (int j = 0; j < count; j++) {
+            int size = indep_story[j].size();
+            Node[] story = new Node[size];
+            int cur = 0;
+            Iterator<Node> itr = indep_story[j].listIterator();
+            while (itr.hasNext()) {
+                story[cur] = itr.next();
+                cur++;
+            }
+            // sort this array story in lexicographical order.
+            storyCharSort(story, 0, size - 1);
+            indep_story[j] = new LinkedList<Node>();
+            for (int k = 0; k < size; k++) {
+                indep_story[j].addLast(story[k]);
+            }
+        }
+
+        // sorting based on size of linkedlist
+        storySort(indep_story, 0, count - 1);
+
+        // System.out.println(count);
+        // System.out.println(indep_story[0].size());
+    }
+
+    public void storyCharSortMerge(Node arr[], int l, int m, int r) {
+        int num1 = m - l + 1;
+        int num2 = r - m;
+
+        Node left[] = new Node[num1];
+        Node right[] = new Node[num2];
+
+        for (int i = 0; i < num1; i++)
+            left[i] = arr[l + i];
+        for (int j = 0; j < num2; j++)
+            right[j] = arr[m + j + 1];
+
+        int i = 0;
+        int j = 0;
+
+        int k = l;
+        while (i < num1 && j < num2) {
+            if (left[i].getId().compareTo(right[j].getId()) > 0) {
+                arr[k] = left[i];
+                i++;
+            } else {
+                arr[k] = right[j];
+                j++;
+            }
+            k++;
+        }
+
+        while (i < num1) {
+            arr[k] = left[i];
+            k++;
+            i++;
+        }
+        while (j < num2) {
+            arr[k] = right[j];
+            j++;
+            k++;
+        }
+    }
+
+    public void storyCharSort(Node arr[], int l, int r) {
+        if (l < r) {
+            int m = (l + r) / 2;
+            storyCharSort(arr, l, m);
+            storyCharSort(arr, m + 1, r);
+            storyCharSortMerge(arr, l, m, r);
+        }
+    }
+
+    public void storySortMerge(LinkedList<Node> arr[], int l, int m, int r) {
+        int num1 = m - l + 1;
+        int num2 = r - m;
+
+        LinkedList<Node> left[] = new LinkedList[num1];
+        LinkedList<Node> right[] = new LinkedList[num2];
+
+        for (int i = 0; i < num1; i++)
+            left[i] = arr[l + i];
+        for (int j = 0; j < num2; j++)
+            right[j] = arr[m + j + 1];
+
+        int i = 0;
+        int j = 0;
+
+        int k = l;
+        while (i < num1 && j < num2) {
+            if (left[i].size() >= right[j].size()) {
+                arr[k] = left[i];
+                i++;
+            } else if (left[i].size() < right[j].size()) {
+                arr[k] = right[j];
+                j++;
+            }
+            k++;
+        }
+
+        while (i < num1) {
+            arr[k] = left[i];
+            k++;
+            i++;
+        }
+        while (j < num2) {
+            arr[k] = right[j];
+            j++;
+            k++;
+        }
+    }
+
+    public void storySort(LinkedList<Node> arr[], int l, int r) {
+        if (l < r) {
+            int m = (l + r) / 2;
+            storySort(arr, l, m);
+            storySort(arr, m + 1, r);
+            storySortMerge(arr, l, m, r);
+        }
     }
 
 }
