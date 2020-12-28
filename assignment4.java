@@ -210,6 +210,14 @@ class Graph {
         // sorting based on size of linkedlist
         storySort(indep_story, 0, count - 1);
 
+        for (int j = 0; j < count; j++) {
+            Iterator<Node> itr = indep_story[j].listIterator();
+            while (itr.hasNext()) {
+                System.out.print(itr.next().getId() + ",");
+            }
+            System.out.println();
+        }
+
         // System.out.println(count);
         // System.out.println(indep_story[0].size());
     }
@@ -279,12 +287,24 @@ class Graph {
 
         int k = l;
         while (i < num1 && j < num2) {
-            if (left[i].size() >= right[j].size()) {
+            if (left[i].size() > right[j].size()) {
                 arr[k] = left[i];
                 i++;
             } else if (left[i].size() < right[j].size()) {
                 arr[k] = right[j];
                 j++;
+            } else {
+                Iterator<Node> leftitr = left[i].listIterator();
+                Iterator<Node> rightitr = right[j].listIterator();
+                while (leftitr.hasNext() && rightitr.hasNext()) {
+                    if (leftitr.next().getId().compareTo(rightitr.next().getId()) > 0) {
+                        arr[k] = left[i];
+                        i++;
+                    } else {
+                        arr[k] = right[j];
+                        j++;
+                    }
+                }
             }
             k++;
         }
