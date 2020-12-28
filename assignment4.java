@@ -8,7 +8,7 @@ public class assignment4 {
     public static void main(String[] args) throws Exception {
         HashMap<String, Node> mp1 = new HashMap<>();
         HashMap<String, Integer> mp2 = new HashMap<>();
-        BufferedReader nodes_csv = new BufferedReader(new FileReader("nodes.csv"));
+        BufferedReader nodes_csv = new BufferedReader(new FileReader(args[0]));
         String row;
         int index = 0;
         while ((row = nodes_csv.readLine()) != null) {
@@ -25,7 +25,7 @@ public class assignment4 {
 
         Graph g = new Graph(count, mp1, mp2);
 
-        BufferedReader edges_csv = new BufferedReader(new FileReader("edges.csv"));
+        BufferedReader edges_csv = new BufferedReader(new FileReader(args[1]));
         while ((row = edges_csv.readLine()) != null) {
             String[] data = row.split(",(?=(?:(?:[^\"]*\"){2})*[^\"]*$)");
             if (!data[0].equals("Source")) {
@@ -39,6 +39,13 @@ public class assignment4 {
         }
         edges_csv.close();
 
+        System.out.println(args[2]);
+        if (args[2].equals("average"))
+            g.average();
+        else if (args[2].equals("rank"))
+            g.rank();
+        else if (args[2].equals("independent_storylines_dfs"))
+            g.independent_storylines_dfs();
         // g.average();
         // g.rank();
         // g.independent_storylines_dfs();
