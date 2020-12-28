@@ -43,9 +43,9 @@ public class assignment4 {
         }
         edges_csv.close();
 
-        g.average();
-        g.rank();
-
+        // g.average();
+        // g.rank();
+        g.independent_storylines_dfs();
     }
 }
 
@@ -157,6 +157,39 @@ class Graph {
             // nodearr[j].getNumCoOccurence());
             System.out.print(nodearr[j].getId() + ",");
         }
+    }
+
+    public void dfsutil(Node v, boolean[] visited) {
+        visited[mp2.get(v.getId())] = true;
+
+        Iterator<Edge> itr = adj[mp2.get(v.getId())].listIterator();
+        while (itr.hasNext()) {
+            Edge n = itr.next();
+            if (!visited[mp2.get(n.getTarget().getId())]) {
+                dfsutil(n.getTarget(), visited);
+            }
+        }
+    }
+
+    public void independent_storylines_dfs() {
+        // use mp2 for string-> int mapping
+        boolean[] visited = new boolean[V];
+        Iterator<Map.Entry<String, Node>> hashmapiter = mp1.entrySet().iterator();
+        Node[] nodearr = new Node[V];
+        int i = 0;
+        while (hashmapiter.hasNext()) {
+            Map.Entry<String, Node> elem = hashmapiter.next();
+            nodearr[i] = elem.getValue();
+            i++;
+        }
+        int count = 0;
+        for (int j = 0; j < V; j++) {
+            if (!visited[mp2.get(nodearr[j].getId())]) {
+                dfsutil(nodearr[j], visited);
+                count++;
+            }
+        }
+        System.out.println(count);
     }
 
 }
