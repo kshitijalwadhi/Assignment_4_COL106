@@ -41,7 +41,8 @@ public class assignment4 {
 
         // g.average();
         // g.rank();
-        g.independent_storylines_dfs();
+        // g.independent_storylines_dfs();
+
     }
 }
 
