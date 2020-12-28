@@ -1,6 +1,4 @@
 import java.io.*;
-//import java.util.ArrayList;
-//import java.util.Vector;
 import java.util.LinkedList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -17,7 +15,6 @@ public class assignment4 {
             String[] data = row.split(",(?=(?:(?:[^\"]*\"){2})*[^\"]*$)");
             if (!data[1].equals("Label")) {
                 data[1] = data[1].replace("\"", "");
-                // System.out.println(data[1] + ": " + index);
                 mp1.put(data[1], new Node(data[1]));
                 mp2.put(data[1], index);
                 index++;
@@ -32,7 +29,6 @@ public class assignment4 {
         while ((row = edges_csv.readLine()) != null) {
             String[] data = row.split(",(?=(?:(?:[^\"]*\"){2})*[^\"]*$)");
             if (!data[0].equals("Source")) {
-                // System.out.println(data[0] + ": " + data[1] + ": " + data[2]);
                 data[0] = data[0].replace("\"", "");
                 data[1] = data[1].replace("\"", "");
                 Edge e1 = new Edge(mp1.get(data[0]), mp1.get(data[1]), Integer.parseInt(data[2]));
@@ -140,8 +136,6 @@ class Graph {
     }
 
     public void rank() {
-        // Node temp = mp1.get("Black Panther / T'chal");
-        // System.out.println((temp.getNumCoOccurence()));
         Iterator<Map.Entry<String, Node>> hashmapiter = mp1.entrySet().iterator();
         Node[] nodearr = new Node[V];
         int i = 0;
@@ -153,20 +147,20 @@ class Graph {
 
         customSort(nodearr, 0, V - 1);
         for (int j = 0; j < V; j++) {
-            // System.out.println(nodearr[j].getId() + ": " +
-            // nodearr[j].getNumCoOccurence());
             System.out.print(nodearr[j].getId() + ",");
         }
     }
 
-    public void dfsutil(Node v, boolean[] visited) {
+    public void dfsutil(Node v, boolean[] visited, LinkedList<Node>[] indep_story, int count) {
         visited[mp2.get(v.getId())] = true;
+
+        indep_story[count].addFirst(v);
 
         Iterator<Edge> itr = adj[mp2.get(v.getId())].listIterator();
         while (itr.hasNext()) {
             Edge n = itr.next();
             if (!visited[mp2.get(n.getTarget().getId())]) {
-                dfsutil(n.getTarget(), visited);
+                dfsutil(n.getTarget(), visited, indep_story, count);
             }
         }
     }
@@ -183,13 +177,19 @@ class Graph {
             i++;
         }
         int count = 0;
+        LinkedList<Node> indep_story[] = new LinkedList[V];
+        for (int k = 0; k < V; k++) {
+            indep_story[k] = new LinkedList<Node>();
+        }
+
         for (int j = 0; j < V; j++) {
             if (!visited[mp2.get(nodearr[j].getId())]) {
-                dfsutil(nodearr[j], visited);
+                dfsutil(nodearr[j], visited, indep_story, count);
                 count++;
             }
         }
         System.out.println(count);
+        System.out.println(indep_story[0].size());
     }
 
 }
