@@ -39,7 +39,6 @@ public class assignment4 {
         }
         edges_csv.close();
 
-        System.out.println(args[2]);
         if (args[2].equals("average"))
             g.average();
         else if (args[2].equals("rank"))
@@ -155,8 +154,12 @@ class Graph {
 
         customSort(nodearr, 0, V - 1);
         for (int j = 0; j < V; j++) {
-            System.out.print(nodearr[j].getId() + ",");
+            if (j == V - 1)
+                System.out.print(nodearr[j].getId());
+            else
+                System.out.print(nodearr[j].getId() + ",");
         }
+        System.out.println();
     }
 
     public void dfsutil(Node v, boolean[] visited, LinkedList<Node>[] indep_story, int count) {
@@ -220,8 +223,14 @@ class Graph {
 
         for (int j = 0; j < count; j++) {
             Iterator<Node> itr = indep_story[j].listIterator();
+            int size = indep_story[j].size();
+            int p = 0;
             while (itr.hasNext()) {
-                System.out.print(itr.next().getId() + ",");
+                if (p != size - 1) {
+                    System.out.print(itr.next().getId() + ",");
+                    p++;
+                } else
+                    System.out.print(itr.next().getId());
             }
             System.out.println();
         }
@@ -304,7 +313,7 @@ class Graph {
             } else {
                 Iterator<Node> leftitr = left[i].listIterator();
                 Iterator<Node> rightitr = right[j].listIterator();
-                while (leftitr.hasNext() && rightitr.hasNext()) {
+                if (leftitr.hasNext() && rightitr.hasNext()) {
                     if (leftitr.next().getId().compareTo(rightitr.next().getId()) > 0) {
                         arr[k] = left[i];
                         i++;
