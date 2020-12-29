@@ -45,10 +45,6 @@ public class assignment4 {
             g.rank();
         else if (args[2].equals("independent_storylines_dfs"))
             g.independent_storylines_dfs();
-        // g.average();
-        // g.rank();
-        // g.independent_storylines_dfs();
-
     }
 }
 
@@ -110,7 +106,7 @@ class Graph {
                 j++;
             } else {
                 // check this order
-                if (left[i].getId().compareTo(right[i].getId()) > 0) {
+                if (left[i].getId().compareTo(right[j].getId()) > 0) {
                     arr[k] = left[i];
                     i++;
                 } else {
@@ -234,9 +230,6 @@ class Graph {
             }
             System.out.println();
         }
-
-        // System.out.println(count);
-        // System.out.println(indep_story[0].size());
     }
 
     public void storyCharSortMerge(Node arr[], int l, int m, int r) {
